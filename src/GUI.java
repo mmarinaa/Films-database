@@ -69,8 +69,15 @@ public class GUI extends JFrame {
                                 " rating: "+films.get(i).getRating();
                         list+="\n";
                     }
-                    JOptionPane.showMessageDialog(null, list, "Film List", JOptionPane.PLAIN_MESSAGE);
-
+                    //JOptionPane.showMessageDialog(null, list, "Film List", JOptionPane.PLAIN_MESSAGE);
+                    String finalList = list;
+                    SwingUtilities.invokeLater(() -> {
+                        JTextArea textArea = new JTextArea(20, 25);
+                        textArea.setText(finalList);
+                        textArea.setEditable(false);
+                        JScrollPane scrollPane = new JScrollPane(textArea);
+                        JOptionPane.showMessageDialog(scrollPane, scrollPane,"Film list",JOptionPane.PLAIN_MESSAGE);
+                    });
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
