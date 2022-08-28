@@ -6,14 +6,14 @@ import java.util.List;
 public class Film {
     private String name;
     private int year;
-    private int rating;
+    private double rating;
 
     public List<String> comments = new ArrayList<String>();
    // int commentsCounter = 0;
     public Film() {
 
     }
-    public Film(String name, int year, int rating) {
+    public Film(String name, int year, double rating) {
         this.name = name;
         this.year = year;
         this.rating = rating;
@@ -40,11 +40,11 @@ public class Film {
         this.year = year;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
@@ -89,5 +89,7 @@ public class Film {
                 ", rating=" + rating +
                 '}';
     }
+
+
 }
 

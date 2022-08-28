@@ -39,7 +39,7 @@ public class FilmDetails {
 
     private void SetFilmRating(String[] filmDetails, Film film, int i) {
         if (i < filmDetails.length && i == 2) {
-            film.setRating(Integer.parseInt(String.valueOf(filmDetails[2])));
+            film.setRating(Double.parseDouble(String.valueOf(filmDetails[2])));
         }
     }
 

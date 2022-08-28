@@ -44,7 +44,38 @@ public class GUI extends JFrame {
         container.add(label3);
         container.add(inputR);
         container.add(button1);                             //add film
+        button1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!inputN.getText().isEmpty()){
+                    try{
+                        Film newf = new Film();
+                        newf.setName(inputN.getText());
+                        if(!inputY.getText().isEmpty()){
+                            int year = Integer.parseInt(inputY.getText());
+                            newf.setYear(year);
+                        }
+                        if(!inputY.getText().isEmpty()){
+                            newf.setRating(Integer.parseInt(inputR.getText()));
+                        }
+                        try{
+                            newf.writeFilm();
+                            JOptionPane.showMessageDialog(null, "Film added!", "Congrats!", JOptionPane.PLAIN_MESSAGE);
 
+                        } catch (FileNotFoundException ex){
+                            JOptionPane.showMessageDialog(null, "File not found", "Error!", JOptionPane.PLAIN_MESSAGE);
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+
+                    } catch (Exception ex){
+                        JOptionPane.showMessageDialog(null, "Something went wrong!", "Error!", JOptionPane.PLAIN_MESSAGE);
+                    }
+
+                }else {
+                    JOptionPane.showMessageDialog(null, "Field \"Title\" cant be empty", "Error!", JOptionPane.PLAIN_MESSAGE);  }
+            }
+        });
        container.add(buttonSA);                                 //show all
         buttonSA.addActionListener(new ActionListener() {
             @Override
@@ -65,7 +96,7 @@ public class GUI extends JFrame {
                     // For Testing Purposes lets get the Passengers
                     String list = "";
                     for (int i = 0; i < films.size();i++) {
-                        list+=i+1+": "+"Title: "+films.get(i).getName()+"\n     year: "+films.get(i).getYear()+"\n    " +
+                        list+=i+1+": "+films.get(i).getName()+"\n     year: "+films.get(i).getYear()+"\n    " +
                                 " rating: "+films.get(i).getRating();
                         list+="\n";
                     }
