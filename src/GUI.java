@@ -1,8 +1,10 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 import javax.swing.*;
 
 
@@ -18,6 +20,7 @@ public class GUI extends JFrame {
     private JLabel label3 = new JLabel("Input Rating");
     private JButton buttonSA = new JButton("Show All");
     private JButton buttonsearch = new JButton("Search");
+    private JButton buttonsort = new JButton("Sort");
     private JRadioButton radioSN = new JRadioButton("Search by Name");
     private JRadioButton radioSY = new JRadioButton("Search by Year");
     private JRadioButton radioSR = new JRadioButton("Search by Rating");
@@ -26,7 +29,7 @@ public class GUI extends JFrame {
     private JRadioButton radioSAY = new JRadioButton("Sort by Year");
     private JRadioButton radioSAR = new JRadioButton("Sort by Rating");
     //private JCheckBox check = new JCheckBox("check", false);
-
+    public List<Film> films = new ArrayList<Film>();
     public GUI(){
         super("Films Catalogue");
         this.setBounds(200, 200, 300, 500);
@@ -40,52 +43,53 @@ public class GUI extends JFrame {
         container.add(inputY);
         container.add(label3);
         container.add(inputR);
+        container.add(button1);                             //add film
 
+       container.add(buttonSA);                                 //show all
+        buttonSA.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String fileName = "src/films.txt";
+
+                BufferedReader reader = null;
+                try {
+                    reader = new BufferedReader(new FileReader(fileName));
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+                FilmDetails filmDetails = new FilmDetails();
+
+                try {
+                    List<Film> films = filmDetails.getFilmFromFile(reader);
+
+                    // For Testing Purposes lets get the Passengers
+                    String list = "";
+                    for (int i = 0; i < films.size();i++) {
+                        list+=i+1+": "+"Title: "+films.get(i).getName()+"\n     year: "+films.get(i).getYear()+"\n    " +
+                                " rating: "+films.get(i).getRating();
+                        list+="\n";
+                    }
+                    JOptionPane.showMessageDialog(null, list, "Film List", JOptionPane.PLAIN_MESSAGE);
+
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+}
+        });
+        ButtonGroup group1 = new ButtonGroup();
+        group1.add(radioSAN);
+        group1.add(radioSAY);
+        group1.add(radioSAR);
+        container.add(radioSAN);
+        container.add(radioSAY);
+        container.add(radioSAR);
+        container.add(buttonsort);
+        container.add(Search);
         ButtonGroup group = new ButtonGroup();
         group.add(radioSN);
         group.add(radioSY);
-       //buttonSA.addActionListener(new ButtonEventListener());
-        container.add(button1);     //add film
-        button1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(!inputN.getText().isEmpty()){
-                    try{
-                        Film newf = new Film();
-                        newf.setName(inputN.getText());
-                        if(!inputY.getText().isEmpty()){
-                            int year = Integer.parseInt(inputY.getText());
-                            newf.setYear(year);
-                        }
-                        if(!inputY.getText().isEmpty()){
-                            newf.setRating(Integer.parseInt(inputR.getText()));
-                        }
-                        try{
-                            newf.writeFilm();
-                            JOptionPane.showMessageDialog(null, "Film added!", "Congrats!", JOptionPane.PLAIN_MESSAGE);
-
-                        } catch (FileNotFoundException ex){
-                            JOptionPane.showMessageDialog(null, "File not found", "Error!", JOptionPane.PLAIN_MESSAGE);
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
-
-                      } catch (Exception ex){
-                       JOptionPane.showMessageDialog(null, "Something went wrong!", "Error!", JOptionPane.PLAIN_MESSAGE);
-                    }
-
-                }
-            }
-        });
-       container.add(buttonSA);     //show all
-
-        container.add(radioSAN);
-        //radioSN.setSelected(true);
-        container.add(radioSAY);
-        container.add(radioSAR);
-        container.add(Search);
+        group.add(radioSR);
         container.add(radioSN);
-        //radioSN.setSelected(true);
         container.add(radioSY);
         container.add(radioSR);
         container.add(buttonsearch);

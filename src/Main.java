@@ -5,7 +5,7 @@ public class Main {
         app.setVisible(true);
 
 
-        //add film      button1, inputN, inputY, inputR
+        //add film      button1, input
 
         //search film
         //- by name

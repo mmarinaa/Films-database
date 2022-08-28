@@ -81,5 +81,13 @@ public class Film {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "Film{" +
+                "name='" + name + '\'' +
+                ", year=" + year +
+                ", rating=" + rating +
+                '}';
     }
+}
 
