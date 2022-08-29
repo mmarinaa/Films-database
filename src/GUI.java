@@ -73,7 +73,6 @@ public class GUI extends JFrame {
                 List<Film> films = read();
                 if (!inputN.getText().isEmpty()) {
                     try {
-
                         Film newf = new Film();
                         newf.setName(inputN.getText());
                         if (!inputY.getText().isEmpty()) {
@@ -85,10 +84,14 @@ public class GUI extends JFrame {
                         }
                         boolean cont = true;
 
-                            if(search(newf.getName())){
+                        for(int i = 0; i < films.size();i++){
+                            if(Film.FilmNameComparator.compare(newf, films.get(i)) == 0){
+                        //}
+                           // if(search(newf.getName()+",")){
                                 JOptionPane.showMessageDialog(null, "Film already exists", "Error", JOptionPane.PLAIN_MESSAGE);
                                 cont = false;
                         }
+                    }
                         if(cont) {
                             try {
                                 newf.writeFilm();
@@ -197,7 +200,9 @@ public class GUI extends JFrame {
         buttonsearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                search(String.valueOf(Search.getText()));
+                if(!search(String.valueOf(Search.getText())))
+                    JOptionPane.showMessageDialog(null, "Film not found", "Film not Found!", JOptionPane.PLAIN_MESSAGE);
+
             }
         });
     }
@@ -205,15 +210,12 @@ public class GUI extends JFrame {
         boolean res = false;
         try {
             String message = parseFile("src/films.txt", s);
-            if (message == "")
+            if (message != "")
             {
-                JOptionPane.showMessageDialog(null, "Film not found", "Film not Found!", JOptionPane.PLAIN_MESSAGE);
-            }
-            else {
                 res = true;
                 JOptionPane.showMessageDialog(null, message, "Film Found!", JOptionPane.PLAIN_MESSAGE);
             }
-
+            //JOptionPane.showMessageDialog(null, "Film not found", "Film not Found!", JOptionPane.PLAIN_MESSAGE);
         } catch (FileNotFoundException ex) {
             throw new RuntimeException(ex);
         }
