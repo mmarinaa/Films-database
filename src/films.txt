@@ -6,3 +6,5 @@ The Godfather Part II,1974,9.0
 Schindler's List,1993,8.9
 The Lord of the Rings: The Return of the King,2003,8.9
 Pulp Fiction,1994,8.8
+American Beauty,1999,8.3
+Joker,2019,8.3

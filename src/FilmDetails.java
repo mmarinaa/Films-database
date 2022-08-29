@@ -14,13 +14,14 @@ public class FilmDetails {
         while ((line = reader.readLine()) != null) {
             String[] filmDetails = line.trim().split(",");
             Film film = new Film();
+            for (int i = 0; i < filmDetails.length; i++) {
 
+                SetFilmName(filmDetails, film, 0);
 
-                SetFilmName(filmDetails, film);
+                SetFilmYear(filmDetails, film, 1);
 
-                SetFilmYear(filmDetails, film);
-
-                SetFilmRating(filmDetails, film);
+                SetFilmRating(filmDetails, film, 2);
+            }
 
             films.add(film);
 
@@ -30,18 +31,22 @@ public class FilmDetails {
 
     }
 
-    private void SetFilmYear(String[] filmDetails, Film film) {
-
+    private void SetFilmYear(String[] filmDetails, Film film, int i) {
+        if (i < filmDetails.length && i == 1) {
             film.setYear(Integer.parseInt(String.valueOf(filmDetails[1])));
-
+        }
     }
 
-    private void SetFilmRating(String[] filmDetails, Film film) {
+    private void SetFilmRating(String[] filmDetails, Film film, int i) {
+        if (i < filmDetails.length && i == 2) {
             film.setRating(Double.parseDouble(String.valueOf(filmDetails[2])));
+        }
     }
 
-    private void SetFilmName(String[] filmDetails, Film film) {
+    private void SetFilmName(String[] filmDetails, Film film, int i) {
+        if (i < filmDetails.length && i == 0) {
             film.setName(String.valueOf(filmDetails[0]));
+        }
     }
 
 }

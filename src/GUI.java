@@ -27,7 +27,26 @@ public class GUI extends JFrame {
     private JRadioButton radioSAY = new JRadioButton("Sort by Year");
     private JRadioButton radioSAR = new JRadioButton("Sort by Rating");
     //private JCheckBox check = new JCheckBox("check", false);
-    public List<Film> films = new ArrayList<Film>();
+
+
+    public List<Film> read(){
+
+        String fileName = "src/films.txt";
+
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(fileName));
+        } catch (FileNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+        FilmDetails filmDetails = new FilmDetails();
+
+        try {
+            return  filmDetails.getFilmFromFile(reader);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public GUI() {
         super("Films Catalogue");
         this.setBounds(200, 200, 300, 500);
@@ -51,26 +70,37 @@ public class GUI extends JFrame {
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                List<Film> films = read();
                 if (!inputN.getText().isEmpty()) {
                     try {
+
                         Film newf = new Film();
                         newf.setName(inputN.getText());
                         if (!inputY.getText().isEmpty()) {
                             int year = Integer.parseInt(inputY.getText());
                             newf.setYear(year);
                         }
-                        if (!inputY.getText().isEmpty()) {
-                            newf.setRating(Integer.parseInt(inputR.getText()));
+                        if (!inputR.getText().isEmpty()) {
+                            newf.setRating(Double.parseDouble(inputR.getText()));
                         }
-                        try {
-                            newf.writeFilm();
-                            JOptionPane.showMessageDialog(null, "Film added!", "Congrats!", JOptionPane.PLAIN_MESSAGE);
+                        boolean cont = true;
 
-                        } catch (FileNotFoundException ex) {
-                            JOptionPane.showMessageDialog(null, "File not found", "Error!", JOptionPane.PLAIN_MESSAGE);
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
+                            if(search(newf.getName())){
+                                JOptionPane.showMessageDialog(null, "Film already exists", "Error", JOptionPane.PLAIN_MESSAGE);
+                                cont = false;
                         }
+                        if(cont) {
+                            try {
+                                newf.writeFilm();
+                                JOptionPane.showMessageDialog(null, "Film added!", "Congrats!", JOptionPane.PLAIN_MESSAGE);
+
+                            } catch (FileNotFoundException ex) {
+                                JOptionPane.showMessageDialog(null, "File not found", "Error!", JOptionPane.PLAIN_MESSAGE);
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }
+
 
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(null, "Something went wrong!", "Error!", JOptionPane.PLAIN_MESSAGE);
@@ -91,36 +121,21 @@ public class GUI extends JFrame {
         buttonSA.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String fileName = "src/films.txt";
-
-                BufferedReader reader = null;
-                try {
-                    reader = new BufferedReader(new FileReader(fileName));
-                } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
+                List<Film> films = read();
+                String list = "";
+                for (int i = 0; i < films.size(); i++) {
+                    list += i + 1 + ": " + films.get(i).getName() + "\n     year: " + films.get(i).getYear() + "\n    " +
+                            " rating: " + films.get(i).getRating();
+                    list += "\n";
                 }
-                FilmDetails filmDetails = new FilmDetails();
-
-                try {
-                    films = filmDetails.getFilmFromFile(reader);
-
-                    String list = "";
-                    for (int i = 0; i < films.size(); i++) {
-                        list += i + 1 + ": " + films.get(i).getName() + "\n     year: " + films.get(i).getYear() + "\n    " +
-                                " rating: " + films.get(i).getRating();
-                        list += "\n";
-                    }
-                    String finalList = list;
-                    SwingUtilities.invokeLater(() -> {
-                        JTextArea textArea = new JTextArea(20, 25);
-                        textArea.setText(finalList);
-                        textArea.setEditable(false);
-                        JScrollPane scrollPane = new JScrollPane(textArea);
-                        JOptionPane.showMessageDialog(scrollPane, scrollPane, "Film list", JOptionPane.PLAIN_MESSAGE);
-                    });
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
+                String finalList = list;
+                SwingUtilities.invokeLater(() -> {
+                    JTextArea textArea = new JTextArea(20, 25);
+                    textArea.setText(finalList);
+                    textArea.setEditable(false);
+                    JScrollPane scrollPane = new JScrollPane(textArea);
+                    JOptionPane.showMessageDialog(scrollPane, scrollPane, "Film list", JOptionPane.PLAIN_MESSAGE);
+                });
             }
         });
         /*
@@ -137,6 +152,7 @@ public class GUI extends JFrame {
         container.add(buttonsort);
         //button "Sort"
         buttonsort.addActionListener(new ActionListener() {
+            List<Film> films = read();
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (radioSAN.isSelected()) {
@@ -181,15 +197,29 @@ public class GUI extends JFrame {
         buttonsearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    parseFile("src/films.txt", Search.getText());
-                } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                }
+                search(String.valueOf(Search.getText()));
             }
         });
     }
-public void parseFile(String fileName, String searchStr) throws FileNotFoundException {
+    public boolean search(String s){
+        boolean res = false;
+        try {
+            String message = parseFile("src/films.txt", s);
+            if (message == "")
+            {
+                JOptionPane.showMessageDialog(null, "Film not found", "Film not Found!", JOptionPane.PLAIN_MESSAGE);
+            }
+            else {
+                res = true;
+                JOptionPane.showMessageDialog(null, message, "Film Found!", JOptionPane.PLAIN_MESSAGE);
+            }
+
+        } catch (FileNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+        return res;
+    }
+public String parseFile(String fileName, String searchStr) throws FileNotFoundException {
     Scanner scan = new Scanner(new File(fileName));
 String message = "";
     int counter = 0;
@@ -201,8 +231,7 @@ String message = "";
             message+=counter+": "+filmDetails[0]+"\n   year: "+filmDetails[1]+"\n   rating: "+filmDetails[2]+"\n";
         }
     }
-    if(counter == 0) JOptionPane.showMessageDialog(null, "Film not found" , "Error", JOptionPane.PLAIN_MESSAGE);
-    else  JOptionPane.showMessageDialog(null,message, "a match!", JOptionPane.PLAIN_MESSAGE);
+return message;
 
 }
 }
