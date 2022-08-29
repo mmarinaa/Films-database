@@ -5,7 +5,7 @@ import java.util.List;
 
 public class FilmDetails {
     /**
-     * Reads the file one line at a time. Each line will is that split up and translated into a Passenger object
+     * Reads the file one line at a time. Each line will is that split up and translated into a Film object
      */
     public List<Film> getFilmFromFile(BufferedReader reader) throws IOException {
         List<Film> films = new ArrayList<>();
@@ -14,14 +14,13 @@ public class FilmDetails {
         while ((line = reader.readLine()) != null) {
             String[] filmDetails = line.trim().split(",");
             Film film = new Film();
-            for (int i = 0; i < filmDetails.length; i++) {
 
-                SetFilmName(filmDetails, film, 0);
 
-                SetFilmYear(filmDetails, film, 1);
+                SetFilmName(filmDetails, film);
 
-                SetFilmRating(filmDetails, film, 2);
-            }
+                SetFilmYear(filmDetails, film);
+
+                SetFilmRating(filmDetails, film);
 
             films.add(film);
 
@@ -31,22 +30,18 @@ public class FilmDetails {
 
     }
 
-    private void SetFilmYear(String[] filmDetails, Film film, int i) {
-        if (i < filmDetails.length && i == 1) {
+    private void SetFilmYear(String[] filmDetails, Film film) {
+
             film.setYear(Integer.parseInt(String.valueOf(filmDetails[1])));
-        }
+
     }
 
-    private void SetFilmRating(String[] filmDetails, Film film, int i) {
-        if (i < filmDetails.length && i == 2) {
+    private void SetFilmRating(String[] filmDetails, Film film) {
             film.setRating(Double.parseDouble(String.valueOf(filmDetails[2])));
-        }
     }
 
-    private void SetFilmName(String[] filmDetails, Film film, int i) {
-        if (i < filmDetails.length && i == 0) {
+    private void SetFilmName(String[] filmDetails, Film film) {
             film.setName(String.valueOf(filmDetails[0]));
-        }
     }
 
 }
