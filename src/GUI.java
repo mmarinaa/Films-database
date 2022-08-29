@@ -1,10 +1,8 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Scanner;
 import javax.swing.*;
 
 
@@ -15,7 +13,7 @@ public class GUI extends JFrame {
     private JTextField inputN = new JTextField("",5);
     private JTextField inputY = new JTextField("",5);
     private JTextField inputR = new JTextField("",5);
-    private JLabel label1 = new JLabel("Input name");
+    private JLabel label1 = new JLabel("Input Title");
     private JLabel label2 = new JLabel("Input year");
     private JLabel label3 = new JLabel("Input Rating");
     private JButton buttonSA = new JButton("Show All");
@@ -43,7 +41,13 @@ public class GUI extends JFrame {
         container.add(inputY);
         container.add(label3);
         container.add(inputR);
-        container.add(button1);                             //add film
+        container.add(button1);
+
+        /*
+        * Add new film parameters(Title, Year, Rating)
+        * using text fields
+        * Button "Add Film"
+        * */
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -76,7 +80,13 @@ public class GUI extends JFrame {
                     JOptionPane.showMessageDialog(null, "Field \"Title\" cant be empty", "Error!", JOptionPane.PLAIN_MESSAGE);  }
             }
         });
-       container.add(buttonSA);                                 //show all
+
+   /*
+   * Show all films using ShowMessageDialog
+   * Button "show all"
+   * */
+
+       container.add(buttonSA);
         buttonSA.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -91,9 +101,8 @@ public class GUI extends JFrame {
                 FilmDetails filmDetails = new FilmDetails();
 
                 try {
-                    List<Film> films = filmDetails.getFilmFromFile(reader);
+                    films = filmDetails.getFilmFromFile(reader);
 
-                    // For Testing Purposes lets get the Passengers
                     String list = "";
                     for (int i = 0; i < films.size();i++) {
                         list+=i+1+": "+films.get(i).getName()+"\n     year: "+films.get(i).getYear()+"\n    " +
@@ -114,14 +123,48 @@ public class GUI extends JFrame {
                 }
 }
         });
-        ButtonGroup group1 = new ButtonGroup();
-        group1.add(radioSAN);
-        group1.add(radioSAY);
-        group1.add(radioSAR);
+        /*
+        * Sort films by Title, Year, Rating
+        * Button "Sort"
+        * */
+        ButtonGroup group1 = new ButtonGroup();//sort parametrs
+        group1.add(radioSAN);                   //by name
+        group1.add(radioSAY);                   //by year
+        group1.add(radioSAR);                   //by rating
         container.add(radioSAN);
         container.add(radioSAY);
         container.add(radioSAR);
-        container.add(buttonsort);
+        container.add(buttonsort);              //button "Sort"
+
+        buttonsort.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (radioSAN.isSelected()) {
+                    films.sort(Film.FilmNameComparator);
+                }
+                if (radioSAY.isSelected()) {
+                    films.sort(Film::compareYearTo);
+                }
+                if (radioSAR.isSelected()) {
+                    films.sort(Film.FilmRatingComparator);
+                }
+                String list = "";
+                for (int i = 0; i < films.size(); i++) {
+                    list += i + 1 + ": " + films.get(i).getName() + "\n     year: " + films.get(i).getYear() + "\n    " +
+                            " rating: " + films.get(i).getRating();
+                    list += "\n";
+                }
+                //JOptionPane.showMessageDialog(null, list, "Film List", JOptionPane.PLAIN_MESSAGE);
+                String finalList = list;
+                {
+                    JTextArea textArea = new JTextArea(20, 25);
+                    textArea.setText(finalList);
+                    textArea.setEditable(false);
+                    JScrollPane scrollPane = new JScrollPane(textArea);
+                    JOptionPane.showMessageDialog(scrollPane, scrollPane, "Film list", JOptionPane.PLAIN_MESSAGE);
+                }
+            }
+        });
         container.add(Search);
         ButtonGroup group = new ButtonGroup();
         group.add(radioSN);
@@ -142,3 +185,4 @@ public class GUI extends JFrame {
       //  }
 //}
 }
+
