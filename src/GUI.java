@@ -9,6 +9,10 @@ import javax.swing.*;
 public class GUI extends JFrame {
     private JButton button1 = new JButton("Add film");
 
+    private JButton button_wf = new JButton("Show watched films");
+    private JButton button_wl = new JButton("Show wish list");
+    private JCheckBox watched = new JCheckBox("Watched", false);
+    private JCheckBox wishList = new JCheckBox("Add to wish list", false);
     private JTextField Search = new JTextField("search",5);
     private JTextField inputN = new JTextField("",5);
     private JTextField inputY = new JTextField("",5);
@@ -26,9 +30,14 @@ public class GUI extends JFrame {
     private JRadioButton radioSAN = new JRadioButton("Sort by Name");
     private JRadioButton radioSAY = new JRadioButton("Sort by Year");
     private JRadioButton radioSAR = new JRadioButton("Sort by Rating");
-    //private JCheckBox check = new JCheckBox("check", false);
 
 
+
+    /*
+    * method for reading film
+    * objects from txt file
+    * "films.txt"
+    */
     public List<Film> read(){
 
         String fileName = "src/films.txt";
@@ -60,6 +69,12 @@ public class GUI extends JFrame {
         container.add(inputY);
         container.add(label3);
         container.add(inputR);
+
+        ButtonGroup group = new ButtonGroup();//sort parametrs
+        group.add(wishList);                   //by name
+        group.add(watched);
+        container.add(watched);
+        container.add(wishList);
         container.add(button1);
 
         /*
@@ -82,6 +97,13 @@ public class GUI extends JFrame {
                         if (!inputR.getText().isEmpty()) {
                             newf.setRating(Double.parseDouble(inputR.getText()));
                         }
+                        if(wishList.isSelected()||((!watched.isSelected())&&(!wishList.isSelected()))){
+                            newf.setCategory("l");
+                        }else
+                        if(watched.isSelected()){
+                            newf.setCategory("w");
+                        }
+
                         boolean cont = true;
 
                         for(int i = 0; i < films.size();i++){
@@ -141,6 +163,61 @@ public class GUI extends JFrame {
                 });
             }
         });
+        container.add(button_wf);
+        button_wf.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<Film> films = read();
+                String list = "";
+                int counter = 0;
+                for (int i = 0; i < films.size(); i++) {
+                    if (Objects.equals(films.get(i).getCategory(), "w")) {
+                        counter ++;
+                        list += counter + ": " + films.get(i).getName() + "\n     year: " + films.get(i).getYear() + "\n    " +
+                                " rating: " + films.get(i).getRating();
+                        list += "\n";
+                    }
+                }
+                if(counter == 0) list = "Watched list is empty";
+                String finalList = list;
+
+                    SwingUtilities.invokeLater(() -> {
+                    JTextArea textArea = new JTextArea(20, 25);
+                    textArea.setText(finalList);
+                    textArea.setEditable(false);
+                    JScrollPane scrollPane = new JScrollPane(textArea);
+                    JOptionPane.showMessageDialog(scrollPane, scrollPane, "Film list", JOptionPane.PLAIN_MESSAGE);
+                });
+            }
+        });
+
+        container.add(button_wl);
+        button_wl.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<Film> films = read();
+                String list = "";
+                int counter = 0;
+                for (int i = 0; i < films.size(); i++) {
+                    if (Objects.equals(films.get(i).getCategory(), "l")) {
+                        counter ++;
+                        list += counter + ": " + films.get(i).getName() + "\n     year: " + films.get(i).getYear() + "\n    " +
+                                " rating: " + films.get(i).getRating();
+                        list += "\n";
+                    }
+                }
+                if(counter == 0) list = "Wish list is empty";
+                String finalList = list;
+
+                SwingUtilities.invokeLater(() -> {
+                    JTextArea textArea = new JTextArea(20, 25);
+                    textArea.setText(finalList);
+                    textArea.setEditable(false);
+                    JScrollPane scrollPane = new JScrollPane(textArea);
+                    JOptionPane.showMessageDialog(scrollPane, scrollPane, "Film list", JOptionPane.PLAIN_MESSAGE);
+                });
+            }
+        });
         /*
          * Sort films by Title, Year, Rating
          * Button "Sort"
@@ -160,13 +237,17 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (radioSAN.isSelected()) {
                     films.sort(Film.FilmNameComparator);
-                }
+                }else
                 if (radioSAY.isSelected()) {
                     films.sort(Film::compareYearTo);
-                }
+                }else
                 if (radioSAR.isSelected()) {
                     films.sort(Film.FilmRatingComparator);
+                }else {
+                    JOptionPane.showMessageDialog(null, "Choose parameter for sorting", "Sorting is not available", JOptionPane.PLAIN_MESSAGE);
+
                 }
+
                 String list = "";
                 for (int i = 0; i < films.size(); i++) {
                     list += i + 1 + ": " + films.get(i).getName() + "\n     year: " + films.get(i).getYear() + "\n    " +
@@ -189,13 +270,6 @@ public class GUI extends JFrame {
          * Button "Search"
          * */
         container.add(Search);
-        /*ButtonGroup group = new ButtonGroup();
-        group.add(radioSN);
-        group.add(radioSY);
-        group.add(radioSR);
-        container.add(radioSN);
-        container.add(radioSY);
-        container.add(radioSR);*/
         container.add(buttonsearch);
         buttonsearch.addActionListener(new ActionListener() {
             @Override
@@ -230,7 +304,10 @@ String message = "";
         if (line.contains(searchStr)) {
             counter++;
             String[] filmDetails = line.trim().split(",");
-            message+=counter+": "+filmDetails[0]+"\n   year: "+filmDetails[1]+"\n   rating: "+filmDetails[2]+"\n";
+            String cat = "";
+            if(filmDetails[3].equals("w")) cat = "Watched";
+            if(filmDetails[3].equals("l")) cat = "Wish list";
+            message+=counter+": "+filmDetails[0]+"\n   year: "+filmDetails[1]+"\n   rating: "+filmDetails[2]+"\n    category: "+cat+"\n";
         }
     }
 return message;

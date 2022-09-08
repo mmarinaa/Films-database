@@ -1,30 +1,36 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 public class Film {
     private String name;
     private int year;
     private double rating;
+    private String category;
 
-    public List<String> comments = new ArrayList<String>();
+   // public List<String> comments = new ArrayList<String>();
 
     // int commentsCounter = 0;
     public Film() {
-
+this.category = "l";
     }
 
     public Film(String name, int year, double rating) {
         this.name = name;
         this.year = year;
         this.rating = rating;
+        this.category = "l";
+    }
+    public Film(String name, int year, double rating, String category) {
+        this.name = name;
+        this.year = year;
+        this.rating = rating;
+        this.category = category;
     }
 
     public Film(String name, int year) {
         this.name = name;
         this.year = year;
+        this.category = "l";
     }
 
     public String getName() {
@@ -51,7 +57,14 @@ public class Film {
         this.rating = rating;
     }
 
-    public void addComment(String comment) {
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+    /*public void addComment(String comment) {
         comments.add(comment);
     }
 
@@ -59,14 +72,14 @@ public class Film {
         for (int i = 0; i < this.comments.size(); i++) {
             System.out.println(i + comments.get(i) + "\n");
         }
-    }
+    }*/
 
     public void writeFilm() throws IOException {
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(
                 new FileWriter(new File("src/films.txt"), true))) {
 
-            bufferedWriter.write(this.name + "," + this.year + "," + this.rating);
+            bufferedWriter.write(this.name + "," + this.year + "," + this.rating + "," +this.category);
             bufferedWriter.newLine();
             bufferedWriter.flush();
             // JOptionPane.showMessageDialog(null, "Film added!", "Congrats!", JOptionPane.PLAIN_MESSAGE);
@@ -76,14 +89,14 @@ public class Film {
         }
     }
 
-    public static Film readFilm(File file) throws IOException, ClassNotFoundException {
+    /*public static Film readFilm(File file) throws IOException, ClassNotFoundException {
         Film result = null;
         try (FileInputStream fis = new FileInputStream(file);
              ObjectInputStream ois = new ObjectInputStream(fis)) {
             result = (Film) ois.readObject();
         }
         return result;
-    }
+    }*/
 
     @Override
     public String toString() {

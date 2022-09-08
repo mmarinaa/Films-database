@@ -13,6 +13,8 @@ public class Main {
         //     -by rating
 
         //show all
+        //show all watched films
+        //show wish list
 
         //sort
         //- by name

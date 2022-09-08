@@ -21,6 +21,9 @@ public class FilmDetails {
                 SetFilmYear(filmDetails, film, 1);
 
                 SetFilmRating(filmDetails, film, 2);
+
+                SetFilmCategory(filmDetails, film, 3);
+
             }
 
             films.add(film);
@@ -46,6 +49,12 @@ public class FilmDetails {
     private void SetFilmName(String[] filmDetails, Film film, int i) {
         if (i < filmDetails.length && i == 0) {
             film.setName(String.valueOf(filmDetails[0]));
+        }
+    }
+
+    private void SetFilmCategory(String[] filmDetails, Film film, int i) {
+        if (i < filmDetails.length && i == 3) {
+            film.setCategory(filmDetails[3]);
         }
     }
 
