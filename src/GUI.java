@@ -108,8 +108,6 @@ public class GUI extends JFrame {
 
                         for(int i = 0; i < films.size();i++){
                             if(Film.FilmNameComparator.compare(newf, films.get(i)) == 0){
-                        //}
-                           // if(search(newf.getName()+",")){
                                 JOptionPane.showMessageDialog(null, "Film already exists", "Error", JOptionPane.PLAIN_MESSAGE);
                                 cont = false;
                         }
@@ -254,7 +252,7 @@ public class GUI extends JFrame {
                             " rating: " + films.get(i).getRating();
                     list += "\n";
                 }
-                //JOptionPane.showMessageDialog(null, list, "Film List", JOptionPane.PLAIN_MESSAGE);
+
                 String finalList = list;
                 {
                     JTextArea textArea = new JTextArea(20, 25);

@@ -8,3 +8,5 @@ The Lord of the Rings: The Return of the King,2003,8.9,w
 Pulp Fiction,1994,8.8,l
 American Beauty,1999,8.3,w
 Joker,2019,8.3,l
+Titanik,1989,9.0,l
+Tit,1989,8.8,w

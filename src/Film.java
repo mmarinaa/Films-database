@@ -7,9 +7,6 @@ public class Film {
     private double rating;
     private String category;
 
-   // public List<String> comments = new ArrayList<String>();
-
-    // int commentsCounter = 0;
     public Film() {
 this.category = "l";
     }
@@ -64,15 +61,7 @@ this.category = "l";
     public void setCategory(String category) {
         this.category = category;
     }
-    /*public void addComment(String comment) {
-        comments.add(comment);
-    }
 
-    public void ShowComments() {
-        for (int i = 0; i < this.comments.size(); i++) {
-            System.out.println(i + comments.get(i) + "\n");
-        }
-    }*/
 
     public void writeFilm() throws IOException {
 
@@ -82,21 +71,12 @@ this.category = "l";
             bufferedWriter.write(this.name + "," + this.year + "," + this.rating + "," +this.category);
             bufferedWriter.newLine();
             bufferedWriter.flush();
-            // JOptionPane.showMessageDialog(null, "Film added!", "Congrats!", JOptionPane.PLAIN_MESSAGE);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    /*public static Film readFilm(File file) throws IOException, ClassNotFoundException {
-        Film result = null;
-        try (FileInputStream fis = new FileInputStream(file);
-             ObjectInputStream ois = new ObjectInputStream(fis)) {
-            result = (Film) ois.readObject();
-        }
-        return result;
-    }*/
 
     @Override
     public String toString() {
